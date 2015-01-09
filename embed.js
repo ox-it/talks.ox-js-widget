@@ -1,4 +1,4 @@
-var callback = function (data) {
+var buildTable = function (data) {
     //heading
     var div_element = $('#embedded-talks');
     var table = $('<table></table>');
@@ -7,21 +7,47 @@ var callback = function (data) {
     for (var i=0; i<data.length; i++)
     {
         talk = data[i];
-        var speakerNames = talk.speakers.map( function (speaker) {
-            return speaker.name;
-        });
 
         var location_name = talk.api_location? talk.api_location.name : "";
 
         table.append($('<tr><td>' + talk.formatted_date
-                        + '</td><td>' + speakerNames.join(', ')
+                        + '</td><td>' + get_person_titles(talk.speakers)
                         + '</td><td>' + talk.title
                         + '</td><td>' + location_name
                         + '</td></tr>'));
     }
 }
 
-var queryTalks = function (params) {
+//given an array of speaker objects, return a comma separated list of their names
+function get_person_titles(persons) {
+    var titles = persons.map( function (person) {
+        return person.name;
+    });
+    return titles.join(', ');
+}
+
+var buildList = function (data) {
+    var div_element = $('#embedded-talks');
+    for(var i=0; i<data.length; i++) {
+        talk = data[i];
+        header = $('<h3>');
+        header.html(talk.title);
+        div_element.append(header);
+        
+        description = $('<p>');
+        description.html(talk.description);
+        div_element.append(description);
+        
+        bullets = $('<ul>');
+        bullets.append($('<li>Speaker: ' + get_person_titles(talk.speakers) + '</li>'));
+        bullets.append($('<li>' + talk.formatted_date + '</li>'));
+        var location = talk.api_location ? talk.api_location.name : "TBA";
+        bullets.append($('<li>' + location + '</li>'));
+        div_element.append(bullets);
+    }
+}
+
+var queryTalks = function (params, callback) {
     var url_stem = "http://talks.local:8000/api/events/search?";
     var terms = [];
     if (params.from) {
@@ -63,6 +89,15 @@ function buildTermsFromArray(array, key) {
 
 
 $(document).ready(function() {
-    queryTalks( { from: "01/01/01",
+    showTable( { from: "01/01/01",
                   speakers: ['prof-kazuo-kishi']} );
+    showList( { from: "01/01/01" } );
 });
+
+function showTable(params) {
+    queryTalks(params, buildTable);
+}
+
+function showList(params) {
+    queryTalks(params, buildList);
+}
