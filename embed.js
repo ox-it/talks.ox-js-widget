@@ -1,6 +1,6 @@
-var buildTable = function (data) {
+var buildTable = function (data, selector) {
     //heading
-    var div_element = $('#embedded-talks');
+    var div_element = $(selector);
     var table = $('<table></table>');
     div_element.append(table);
     table.append($('<tr><th>Date</th><th>Speakers</th><th>Title</th><th>Venue</th></tr>'));
@@ -26,8 +26,8 @@ function get_person_titles(persons) {
     return titles.join(', ');
 }
 
-var buildList = function (data) {
-    var div_element = $('#embedded-talks');
+var buildList = function (data, selector) {
+    var div_element = $(selector);
     for(var i=0; i<data.length; i++) {
         talk = data[i];
         header = $('<h3>');
@@ -52,7 +52,9 @@ var buildList = function (data) {
     }
 }
 
-var queryTalks = function (params, callback) {
+
+//Performs the query then calling the specified callback function with the results and the selector
+var queryTalks = function (params, callback, selector) {
     var url_stem = "http://talks.local:8000/api/events/search?";
 //    var url_stem = "http://talks-dev.oucs.ox.ac.uk/api/events/search?";
     var terms = [];
@@ -73,7 +75,9 @@ var queryTalks = function (params, callback) {
         url: url,
         type: "get",
         dataType: "json",
-        success: callback,
+        success: function (response) {
+            callback(response, selector);                    
+        },
         failure: function (response) {
             console.log("AJAX call failed");
         }
@@ -92,11 +96,20 @@ function buildTermsFromArray(array, key) {
     return [];
 }
 
-
-function showTable(params) {
-    queryTalks(params, buildTable);
+//Perform the query, providing the buildTable callback and passing on the specified selector
+function showTable(params, selector) {
+    //append to body if no selector specified
+    if (!selector) {
+        selector = 'body';
+    }
+    queryTalks(params, buildTable, selector);
 }
 
-function showList(params) {
-    queryTalks(params, buildList);
+//Perform the query, providing the buildTable callback and passing on the specified selector
+function showList(params, selector) {
+    //append to body if no selector specified
+    if (!selector) {
+        selector = 'body';
+    }
+    queryTalks(params, buildList, selector);
 }
