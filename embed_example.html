@@ -1,14 +1,28 @@
 <html>
     <head>
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script src = "embed.js"></script>
     </head>
     <body>
     <h1>Example of embedding</h1>
 
-        <script src = "embed.js"></script>
+    <div id="embedded-talks"></div>
+        
+    <script>
+    var params = 
+        {   from: "01/01/01",           //Start date range - dd/mm/yy. Required
+            to: null,                   //end date range, - dd/mm/yy
+            speakers: [],               //array of speaker slugs
+            venues: [],                 //array of oxpoints IDs
+            organising_departments: [], //array of oxpoints IDs
+            topics: []                  //array of FAST topic URIs
+         };
 
-        <div id="embedded-talks"></div>
 
+    showTable( params );
+    showList( params );
+    </script>
+        
     </body>
 </html>
 

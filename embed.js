@@ -40,6 +40,11 @@ var buildList = function (data) {
         
         bullets = $('<ul>');
         bullets.append($('<li>Speaker: ' + get_person_titles(talk.speakers) + '</li>'));
+        start_time = new Date(talk.start);
+        end_time = new Date(talk.end);
+//        bullets.append($('<li>' + start_time.toLocaleDateString() 
+//                         + ', ' + start_time.toLocaleTimeString() 
+//                         + " - " + end_time.toLocaleTimeString() + '</li>'));
         bullets.append($('<li>' + talk.formatted_date + '</li>'));
         var location = talk.api_location ? talk.api_location.name : "TBA";
         bullets.append($('<li>' + location + '</li>'));
@@ -49,6 +54,7 @@ var buildList = function (data) {
 
 var queryTalks = function (params, callback) {
     var url_stem = "http://talks.local:8000/api/events/search?";
+//    var url_stem = "http://talks-dev.oucs.ox.ac.uk/api/events/search?";
     var terms = [];
     if (params.from) {
         terms.push('from=' + params.from);
@@ -56,8 +62,7 @@ var queryTalks = function (params, callback) {
     if (params.to) {
         terms.push('to=' + params.to);
     }
-    var speakers = buildTermsFromArray(params.speakers, 'speaker')
-    terms = terms.concat( speakers );
+    terms = terms.concat( buildTermsFromArray(params.speakers, 'speaker') );
     terms = terms.concat( buildTermsFromArray(params.venues, 'venue') );
     terms = terms.concat( buildTermsFromArray(params.organising_departments, 'organising_department') );
     terms = terms.concat( buildTermsFromArray(params.topics, 'topic') );
@@ -87,12 +92,6 @@ function buildTermsFromArray(array, key) {
     return [];
 }
 
-
-$(document).ready(function() {
-    showTable( { from: "01/01/01",
-                  speakers: ['prof-kazuo-kishi']} );
-    showList( { from: "01/01/01" } );
-});
 
 function showTable(params) {
     queryTalks(params, buildTable);
