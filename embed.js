@@ -4,14 +4,14 @@ var buildTable = function (data, selector) {
     var table = $('<table></table>');
     div_element.append(table);
     table.append($('<tr><th>Date</th><th>Speakers</th><th>Title</th><th>Venue</th></tr>'));
-    for (var i=0; i<data.length; i++)
+    for (var i=0; i<data._embedded.talks.length; i++)
     {
-        talk = data[i];
+        talk = data._embedded.talks[i];
 
-        var location_name = talk.api_location? talk.api_location.name : "";
+        var location_name = talk._embedded.venue ? talk._embedded.venue.name : "";
 
         table.append($('<tr><td>' + talk.formatted_date
-                        + '</td><td>' + get_person_titles(talk.speakers)
+                        + '</td><td>' + get_person_titles(talk._embedded.speakers)
                         + '</td><td>' + talk.title
                         + '</td><td>' + location_name
                         + '</td></tr>'));
@@ -21,15 +21,18 @@ var buildTable = function (data, selector) {
 //given an array of speaker objects, return a comma separated list of their names
 function get_person_titles(persons) {
     var titles = persons.map( function (person) {
-        return person.name;
+        return person.name + ' (' + person.bio + ')';
     });
+    if(titles.length <= 0) {
+        titles.push("TBA")
+    }
     return titles.join(', ');
 }
 
 var buildList = function (data, selector) {
     var div_element = $(selector);
-    for(var i=0; i<data.length; i++) {
-        talk = data[i];
+    for(var i=0; i<data._embedded.talks.length; i++) {
+        talk = data._embedded.talks[i];
         header = $('<h3>');
         header.html(talk.title);
         div_element.append(header);
@@ -39,14 +42,14 @@ var buildList = function (data, selector) {
         div_element.append(description);
         
         bullets = $('<ul>');
-        bullets.append($('<li>Speaker: ' + get_person_titles(talk.speakers) + '</li>'));
+        bullets.append($('<li>Speaker: ' + get_person_titles(talk._embedded.speakers) + '</li>'));
         start_time = new Date(talk.start);
         end_time = new Date(talk.end);
 //        bullets.append($('<li>' + start_time.toLocaleDateString() 
 //                         + ', ' + start_time.toLocaleTimeString() 
 //                         + " - " + end_time.toLocaleTimeString() + '</li>'));
         bullets.append($('<li>' + talk.formatted_date + '</li>'));
-        var location = talk.api_location ? talk.api_location.name : "TBA";
+        var location = talk._embedded.venue ? talk._embedded.venue.name : "TBA";
         bullets.append($('<li>' + location + '</li>'));
         div_element.append(bullets);
     }
