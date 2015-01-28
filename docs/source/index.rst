@@ -1,15 +1,16 @@
-.. talks.ox JS widget documentation master file, created by
-   sphinx-quickstart on Wed Jan 28 10:18:42 2015.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+=========================
+Oxford Talks Embed Widget
+=========================
 
-Welcome to talks.ox JS widget's documentation!
-==============================================
-
-Contents:
+Web Managers
+============
 
 .. toctree::
    :maxdepth: 2
+
+   web-managers/example-embed.rst
+   web-managers/github-zip.rst
+   web-managers/find-ids.rst
 
 
 
