@@ -30,11 +30,13 @@ var oxtalks = {
         {
             talk = data._embedded.talks[i];
 
-            var location_name = talk._embedded.venue ? talk._embedded.venue.name : "";
+            var location_name = talk._embedded.venue ? talk._embedded.venue.name : "TBA";
 
+            var talk_title = talk.title.length>0 ? talk.title : "Title TBA";
+            
             table.append($('<tr><td>' + talk.formatted_date
                             + '</td><td>' + this.get_person_titles(talk._embedded.speakers)
-                            + '</td><td>' + talk.title
+                            + '</td><td>' + talk_title
                             + '</td><td>' + location_name
                             + '</td></tr>'));
         }
@@ -61,7 +63,8 @@ var oxtalks = {
         for(var i=0; i<data._embedded.talks.length; i++) {
             talk = data._embedded.talks[i];
             header = $('<h3>');
-            header.html(talk.title);
+            var talk_title = talk.title.length>0 ? talk.title : "Title TBA";
+            header.html(talk_title);
             element.append(header);
 
             description = $('<p>');
@@ -76,7 +79,7 @@ var oxtalks = {
     //                         + ', ' + start_time.toLocaleTimeString() 
     //                         + " - " + end_time.toLocaleTimeString() + '</li>'));
             bullets.append($('<li>' + talk.formatted_date + '</li>'));
-            var location = talk._embedded.venue ? talk._embedded.venue.name : "TBA";
+            var location = talk._embedded.venue ? talk._embedded.venue.name : "Venue TBA";
             bullets.append($('<li>' + location + '</li>'));
             element.append(bullets);
         }
@@ -114,7 +117,6 @@ var oxtalks = {
         terms = terms.concat( this.buildTermsFromArray(params.organising_departments, 'organising_department') );
         terms = terms.concat( this.buildTermsFromArray(params.topics, 'topic') );
 
-        terms.push("count=2");
         var url = url_stem + terms.join('&');
 
         this.queryURL(url, callback, element);
