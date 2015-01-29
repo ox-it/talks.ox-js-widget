@@ -98,6 +98,7 @@ pygments_style = 'sphinx'
 
 rst_prolog = """
 .. |oxtalks-url| replace:: http://new.talks.ox.ac.uk
+.. |oxtalks-url-ssl| replace:: https://new.talks.ox.ac.uk
 .. |quoted-oxtalks| replace:: 'http://new.talks.ox.ac.uk/api/events/search?'
 """
 
