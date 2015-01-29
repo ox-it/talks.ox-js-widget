@@ -55,8 +55,8 @@ var buildList = function (data, selector) {
 
 //Performs the query then calling the specified callback function with the results and the selector
 var queryTalks = function (params, callback, selector) {
-    var url_stem = "http://talks.local:8000/api/events/search?";
-//    var url_stem = "http://talks-dev.oucs.ox.ac.uk/api/events/search?";
+//    var url_stem = "//talks.local:8000/api/events/search?";
+    var url_stem = "//talks-dev.oucs.ox.ac.uk/api/events/search?";
     var terms = [];
     if (params.from) {
         terms.push('from=' + params.from);
