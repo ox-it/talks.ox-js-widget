@@ -28,7 +28,7 @@ The HTML page calls the JQuery library (see `https://developers.google.com/speed
    showTable( params );                    //appends to body, since no selector specified
    showList( params, "#embedded-talks" );  //appends to the specified element
    
-2. To customise your selection of talks adjust the code::`var params` section in the *<script>* tag. Full instructions on how to do this are given in the Parameters section below.
+2. To customise your selection of talks adjust the :code:`var params` section in the *<script>* tag. Full instructions on how to do this are given in the Parameters section below.
 
 Customising the JavaScript file - embed.js
 ------------------------------------------
