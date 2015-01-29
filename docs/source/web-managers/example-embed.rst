@@ -35,13 +35,13 @@ Customising the JavaScript file - embed.js
 
 The JavaScript file queries Oxford Talks and formats the results.
 
-1. Double check the url_stem - it should be set as follows 
+1. Double check the url_stem - it should be set as follows (and should always be https)
 
 .. parsed-literal::
 
-   var url_stem = '|oxtalks-url|/api/events/search?';
-
-2. This is where you can tweak the HTML of the output, by adjusting the *buildList* or *buildTable* functions.
+   var url_stem = '|oxtalks-url-ssl|/api/events/search?';
+   
+2. This is where you can tweak the HTML of the output, by adjusting the :code:`buildList` or :code:`buildTable` functions.
 
 Parameters
 ----------
