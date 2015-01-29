@@ -96,6 +96,10 @@ pygments_style = 'sphinx'
 # If true, keep warnings as "system message" paragraphs in the built documents.
 #keep_warnings = False
 
+rst_prolog = """
+.. |oxtalks-url| replace:: http://new.talks.ox.ac.uk
+.. |quoted-oxtalks| replace:: 'http://new.talks.ox.ac.uk/api/events/search?'
+"""
 
 # -- Options for HTML output ----------------------------------------------
 
