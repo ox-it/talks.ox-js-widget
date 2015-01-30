@@ -1,3 +1,12 @@
+/////////////////////////////////////////////////
+//    embed_ox_talks.js
+//
+//    A script to retrieve search results from the talks.ox API and format the response
+//    Latest source and usage example are available at https://github.com/ox-it/talks.ox-js-widget
+//    Documentation: http://talksox.readthedocs.org/en/latest/
+
+var OX_TALKS_URL_STEM = "https://talks.ox.ac.uk/api/events/search?";
+
 var oxtalks = {
     
     //given an array of speaker objects, return a comma separated list of their names
@@ -101,10 +110,8 @@ var oxtalks = {
         }
     },
 
-    //Performs the query then calling the specified callback function with the results and the selector
+    //Prepares the query url based on the specified search parameters object
     queryTalks: function (params, callback, element) {
-        var url_stem = "http://talks.local:8000/api/events/search?";
-    //    var url_stem = "http://talks-dev.oucs.ox.ac.uk/api/events/search?";
         var terms = [];
         if (params.from) {
             terms.push('from=' + params.from);
@@ -116,12 +123,17 @@ var oxtalks = {
         terms = terms.concat( this.buildTermsFromArray(params.venues, 'venue') );
         terms = terms.concat( this.buildTermsFromArray(params.organising_departments, 'organising_department') );
         terms = terms.concat( this.buildTermsFromArray(params.topics, 'topic') );
+        if (params.page_size) {
+            terms.push('count=' + params.page_size);
+        }
+        var url_stem = params.url ? params.url : OX_TALKS_URL_STEM;
 
         var url = url_stem + terms.join('&');
 
         this.queryURL(url, callback, element);
     },
 
+    //Submit the query to the talks server. This is called by the original request, and also by clicks to paging links.
     queryURL: function(url, callback, element) {
         $.ajax({
             url: url,
@@ -146,8 +158,19 @@ var oxtalks = {
         }
         return [];
     },
-
-    //Perform the query, providing the buildTable callback and passing on the specified selector
+    
+    //create a new container, returns the jquery selector for it
+    createContainer: function() {
+        var divname = "oxtalks";
+        var newDiv = $("<div id=" + divname + "></div>");
+        $('body').append(newDiv);
+        return '#' + divname;
+    },
+    
+    ///////
+    // Interface - use these methods to add a table or list to the page
+    
+    //Perform the query, and place a table of results in the specified selector
     showTable: function(params, selector) {
         //create a div element named "oxtalks" and append to body if no selector specified
         if (!selector) {
@@ -156,20 +179,12 @@ var oxtalks = {
         this.queryTalks(params, this.buildTable, $(selector));
     },
 
-    //Perform the query, providing the buildTable callback and passing on the specified selector
+    //Perform the query, and place a list of results in the specified selector
     showList: function(params, selector) {
         //append to body if no selector specified
         if (!selector) {
             selector = this.createContainer();
         }
         this.queryTalks(params, this.buildList, $(selector));
-    },
-    
-    //create a new container, returns the jquery selector for it
-    createContainer: function() {
-        var divname = "oxtalks";
-        var newDiv = $("<div id=" + divname + "></div>");
-        $('body').append(newDiv);
-        return '#' + divname;
     }
 }
