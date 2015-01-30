@@ -11,7 +11,7 @@
         
     <script>
     var params = 
-        {   from: "01/01/01",           //Start date range - dd/mm/yy. Required
+        {   from: "today",           //Start date range - dd/mm/yy. Required
             to: null,                   //end date range, - dd/mm/yy
             speakers: [],               //array of speaker slugs
             venues: [],                 //array of oxpoints IDs
@@ -20,8 +20,8 @@
          };
 
 
-    oxtalks.showTable( params, "#embedded-table" );                    //appends to body, since no selector specified
-    oxtalks.showList( params, "#embedded-talks" );  //appends to the specified element
+    oxtalks.showTable( params );                    //appends to body, since no selector specified
+    oxtalks.showList( params, "#embedded-talks" );  //replaces the contents of the specified element
     </script>
         
     </body>

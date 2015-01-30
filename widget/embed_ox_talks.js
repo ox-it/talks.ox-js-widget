@@ -149,9 +149,9 @@ var oxtalks = {
 
     //Perform the query, providing the buildTable callback and passing on the specified selector
     showTable: function(params, selector) {
-        //append to body if no selector specified
+        //create a div element named "oxtalks" and append to body if no selector specified
         if (!selector) {
-            selector = 'body';
+            selector = this.createContainer();
         }
         this.queryTalks(params, this.buildTable, $(selector));
     },
@@ -160,8 +160,16 @@ var oxtalks = {
     showList: function(params, selector) {
         //append to body if no selector specified
         if (!selector) {
-            selector = 'body';
+            selector = this.createContainer();
         }
         this.queryTalks(params, this.buildList, $(selector));
+    },
+    
+    //create a new container, returns the jquery selector for it
+    createContainer: function() {
+        var divname = "oxtalks";
+        var newDiv = $("<div id=" + divname + "></div>");
+        $('body').append(newDiv);
+        return '#' + divname;
     }
 }
