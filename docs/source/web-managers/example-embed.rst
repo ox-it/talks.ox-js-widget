@@ -5,48 +5,62 @@ The example widget to get you started with embedding talks in your own webpages 
 
 `https://github.com/ox-it/talks.ox-js-widget <https://github.com/ox-it/talks.ox-js-widget>`_
 
-The widget uses JavaScript to write a table or list of selected talks to an HTML page. You can specify the criteria to select the talks. 
+The widget uses JavaScript to write a table or list of selected talks to an HTML page. You can specify the criteria to select the talks.
+
+This is a very basic guide for web managers and integrators, developers can probably skip to the Parameters Reference at the end. 
 
 Installation
 ------------
 
-1. If you aren't familiar with github you can just download the latest files following the :doc:`instructions in this guide <github-zip>`.
-2. Place the two files - *embed.js* and *embed_example.html* - in a single directory on your computer or web server.
-3. Follow the instructions below to customize the widget.
-4. You are now ready to test the widget by viewing *embed_example.html* in your browser.
-
-
-Customising the HTML page - embed_example.html
-----------------------------------------------
-
-The HTML page calls the JQuery library (see `https://developers.google.com/speed/libraries/devguide <https://developers.google.com/speed/libraries/devguide>`_) and the local JavaScript file - *embed.js*. The main work is done in the *<script>* tag at the bottom of the page.
-
-1. There are two functions provided - one delivering a table, the other a plain listing of talks, with the option to specify the id of the HTML element you would like to populate with your listing or table. Once you've finished testing, you can delete one or other of these as you probably won't want both.
-
-.. code::
-   
-   showTable( params );                    //appends to body, since no selector specified
-   showList( params, "#embedded-talks" );  //appends to the specified element
-   
-2. To customise your selection of talks adjust the :code:`var params` section in the *<script>* tag. Full instructions on how to do this are given in the Parameters section below.
-
-Customising the JavaScript file - embed.js
-------------------------------------------
-
-The JavaScript file queries Oxford Talks and formats the results.
-
-1. Double check the url_stem - it should be set as follows (and should always be https)
+1. `Download <https://github.com/ox-it/talks.ox-js-widget/archive/master.zip>`_ the latest files (:doc:`instructions on downloading from the github repository in this guide <github-zip>`)
+2. You will only need the files in the widget folder - **embed_ox_talks.js** and **embed_example.html**.
+3. Place these in a single directory on your computer or web server
+4. Next open the **embed_ox-talks.js** in a text editor and check the configuration - the :code:`url_stem` should be set as follows (and should always be https)
 
 .. parsed-literal::
 
    var url_stem = '|oxtalks-url-ssl|/api/events/search?';
-   
-2. This is where you can tweak the HTML of the output, by adjusting the :code:`buildList` or :code:`buildTable` functions.
 
-Parameters
-----------
+5. You are now ready to test the widget by opening and viewing **embed_example.html** in your browser
 
-example-embed.html uses information you provide to build your selection of talks. Speakers, venues etc are searched via their ID - check the :doc:`instructions on how to find the IDs you need <find-ids>`. 
+Defining your selection of talks
+--------------------------------
+
+You do this in the HTML page
+
+1. Open **embed_example.html** in a text editor
+2. The main work is done in the *<script>* tag at the bottom of the page 
+3. To customise your selection of talks adjust the :code:`var params` section in the *<script>* tag. Full instructions on how to do this are given in the Parameters Reference section below
+
+Changing how the talks are displayed
+------------------------------------
+
+1. In **embed_example.html** you will see two functions in the *<script>* tag at the bottom of the page. - one delivering a table, the other a plain listing of talks:
+
+.. code::
+
+      showTable( params );                    //appends to body, since no selector specified
+      showList( params, "#embedded-talks" );  //appends to the specified element
+
+2. Both have the option to specify the id of the HTML element you would like to populate, and some example elements are provided in the middle of the page:
+
+.. code::
+
+     <h1>Example of embedding</h1>
+
+     <div id="embedded-talks"></div>
+     <div id="embedded-table"></div>
+
+3. Once you've finished testing, you can delete one or other of these as you probably won't want both
+
+4. If the actual output of the listing or the table is not to your liking you will need to investigate the JavaScript file **embed_ox_talks.js** in more detail and adjust the :code:`buildList` or :code:`buildTable` functions
+
+Parameters Reference
+--------------------
+
+The web page **embed-example.html** uses information you provide to build your selection of talks. 
+
+.. Note:: Speakers, venues etc are searched via their ID - check the :doc:`instructions on how to find the IDs you need <find-ids>`. 
 
 from : date string ('dd/mm/yy'), **required**
      * Start date for the list of talks. 
