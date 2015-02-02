@@ -21,8 +21,6 @@ var oxtalks = {
     },
     
     buildTable: function (data, element) {
-        //heading
-    //    var div_element = $(selector);
         element.empty();
         //replace the contents of the existing table if it's there. Else create it.
         var table = $('table', element);
