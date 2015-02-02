@@ -5,7 +5,7 @@
 //    Latest source and usage example are available at https://github.com/ox-it/talks.ox-js-widget
 //    Documentation: http://talksox.readthedocs.org/en/latest/
 
-var OX_TALKS_URL_STEM = "https://talks.ox.ac.uk/api/events/search?";
+var OX_TALKS_URL_STEM = "https://talks.ox.ac.uk/api/talks/search?";
 
 var oxtalks = {
     
