@@ -11,17 +11,19 @@
         
     <script>
     var params = 
-        {   from: "01/01/01",           //Start date range - dd/mm/yy. Required
-            to: null,                   //end date range, - dd/mm/yy
-            speakers: [],               //array of speaker slugs
-            venues: [],                 //array of oxpoints IDs
-            organising_departments: [], //array of oxpoints IDs
-            topics: []                  //array of FAST topic URIs
+        {   from: "01/01/01",             //Start date range - dd/mm/yy. Required
+            //to: null,                   //end date range, - dd/mm/yy
+            //speakers: [],               //array of speaker slugs
+            //venues: [],                 //array of oxpoints IDs
+            //organising_departments: [], //array of oxpoints IDs
+            //topics: [],                 //array of FAST topic URIs
+            //url: null,                  //url stem for the API request. Defaults to http://talks.ox.ac.uk/api/talks/search?
+            //page_size: 2                //optionally specify the page size for pagination of results.
          };
 
 
-    showTable( params );                    //appends to body, since no selector specified
-    showList( params, "#embedded-talks" );  //appends to the specified element
+    oxtalks.showTable( params );                    //appends to body, since no selector specified
+    oxtalks.showList( params, "#embedded-talks" );  //replaces the contents of the specified element
     </script>
         
     </body>
