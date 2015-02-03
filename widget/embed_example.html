@@ -1,6 +1,9 @@
 <html>
     <head>
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js'></script>
+        <link rel='stylesheet' href='../libs/fullcalendar/dist/fullcalendar.css' />
+        <script src='../libs/fullcalendar/dist/fullcalendar.js'></script>
         <script src = "embed_ox_talks.js"></script>
     </head>
     <body>
@@ -8,22 +11,24 @@
 
     <div id="embedded-talks"></div>
     <div id="embedded-table"></div>
+    <div id="embedded-calendar"></div>
         
     <script>
     var params = 
-        {   from: "today",             //Start date range - dd/mm/yy. Required
+        {   from: "01/01/01",             //Start date range - dd/mm/yy. Required
             //to: null,                   //end date range, - dd/mm/yy
             //speakers: [],               //array of speaker slugs
             //venues: [],                 //array of oxpoints IDs
             //organising_departments: [], //array of oxpoints IDs
             //topics: [],                 //array of FAST topic URIs
-            //url: null,                  //url stem for the API request. Defaults to http://talks.ox.ac.uk/api/talks/search?
+            url: "http://192.168.59.103:8000/api/talks/search?",                  //url stem for the API request. Defaults to http://talks.ox.ac.uk/api/talks/search?
             //page_size: 2                //optionally specify the page size for pagination of results.
          };
 
 
     oxtalks.showTable( params );                    //appends to body, since no selector specified
     oxtalks.showList( params, "#embedded-talks" );  //replaces the contents of the specified element
+    oxtalks.showCalendar( params, "#embedded-calendar" );                 //appends a calendar to the body
     </script>
         
     </body>

@@ -175,6 +175,39 @@ var oxtalks = {
         return '#' + divname;
     },
     
+    eventSource: {
+        events: function(start, end, timezone, callback) {
+            // build new query
+            //TODO look the params up from the element.
+            var params = oxtalks.params
+            params.start = start.format("DD/MM/YY");
+            params.end = end.format("DD/MM/YY");
+            
+            // fire off the query
+            oxtalks.queryTalks(params, oxtalks.updateCalendar.bind(callback), null);
+        }
+    },
+    
+    updateCalendar: function(data, element) {
+        var events = data._embedded.talks;
+        //fullCalendar's callback method should exist in the calling context
+        this(events);
+    },
+    
+    ConvertToCalendarEvent: function(talk) {
+//        if(fullCalendar) {
+            var event = {
+                id: talk.title,
+                title: talk.title,
+                allDay: false,
+                start: talk.start,
+                end: talk.end,
+                url: talk._links.talks_page.href,
+            }
+            return event;
+//        }
+    },
+    
     ///////
     // Interface - use these methods to add a table or list to the page
     
@@ -194,5 +227,27 @@ var oxtalks = {
             selector = this.createContainer();
         }
         this.queryTalks(params, this.buildList, $(selector));
-    }
+    },
+
+    //Create the calendar
+    showCalendar: function(params, selector) {
+//        if(!fullCalendar) {
+//            console.error("Must have fullcalendar included in order to display a calendar");
+//            return;
+//        }
+        //append to body if no selector specified
+        if (!selector) {
+            selector = this.createContainer();
+        }
+        //TODO Store the params on the element
+        oxtalks.params = params;
+        //Create calendar
+        $(selector).fullCalendar({
+            events: this.eventSource,
+            color: 'blue',
+            textColor: 'white',
+            editable: false,
+            eventDataTransform: oxtalks.ConvertToCalendarEvent,
+        });
+    },
 }
