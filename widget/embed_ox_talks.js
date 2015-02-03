@@ -20,6 +20,18 @@ var oxtalks = {
         return titles.join(', ');
     },
     
+    build_location: function(venue) {
+        if (venue) {
+            return "<a href=" + venue.map_link + ">" + venue.name + "</a>";
+        }
+        else return "TBA";
+    },
+    
+    build_title: function(talk) {
+        var title = talk.title ? talk.title : "TBA";
+        return "<a href='" + talk._links.talks_page.href + "'>" + title + "</a>";
+    },
+    
     buildTable: function (data, element) {
         element.empty();
         //replace the contents of the existing table if it's there. Else create it.
@@ -37,9 +49,8 @@ var oxtalks = {
         {
             talk = data._embedded.talks[i];
 
-            var location_name = talk._embedded.venue ? talk._embedded.venue.name : "TBA";
-
-            var talk_title = talk.title.length>0 ? talk.title : "Title TBA";
+            var location_name = this.build_location(talk._embedded.venue);
+            var talk_title = this.build_title(talk);
             
             table.append($('<tr><td>' + talk.formatted_date
                             + '</td><td>' + this.get_person_titles(talk._embedded.speakers)
@@ -69,9 +80,8 @@ var oxtalks = {
         element.empty();
         for(var i=0; i<data._embedded.talks.length; i++) {
             talk = data._embedded.talks[i];
-            header = $('<h3>');
-            var talk_title = talk.title.length>0 ? talk.title : "Title TBA";
-            header.html(talk_title);
+            var talk_title = this.build_title(talk);
+            header = $('<h3>' + talk_title + '</h3>');
             element.append(header);
 
             description = $('<p>');
@@ -86,7 +96,7 @@ var oxtalks = {
     //                         + ', ' + start_time.toLocaleTimeString() 
     //                         + " - " + end_time.toLocaleTimeString() + '</li>'));
             bullets.append($('<li>' + talk.formatted_date + '</li>'));
-            var location = talk._embedded.venue ? talk._embedded.venue.name : "Venue TBA";
+            var location = this.build_location(talk._embedded.venue);
             bullets.append($('<li>' + location + '</li>'));
             element.append(bullets);
         }
