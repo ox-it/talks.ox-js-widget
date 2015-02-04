@@ -239,6 +239,8 @@ var oxtalks = {
             "min-width": '200px',
             "max-width": '700px',
             "width": '500%',
+            "max-height": '300px',
+            "overflow": 'scroll',
         });
         $popover.append($talkInfo);
         //this is set to the event's div element.
