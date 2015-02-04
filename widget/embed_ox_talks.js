@@ -167,7 +167,7 @@ var oxtalks = {
         return [];
     },
     
-    //create a new container, returns the jquery selector for it
+    //create a new div container, returns the jquery selector for it
     createContainer: function() {
         var divname = "oxtalks";
         var newDiv = $("<div id=" + divname + "></div>");
@@ -175,37 +175,44 @@ var oxtalks = {
         return '#' + divname;
     },
     
-    eventSource: {
-        events: function(start, end, timezone, callback) {
-            // build new query
-            //TODO look the params up from the element.
-            var params = oxtalks.params
-            params.start = start.format("DD/MM/YY");
-            params.end = end.format("DD/MM/YY");
-            
+    //create a new fullcalendar Eventsource for the given query params, which will be invoked by fullcalendar as the calendar is browsed
+    createEventSource: function(params) {
+        //store the search params for future queries
+        var p = params;
+        
+        //calls fullcalendar's callback with the new set of events
+        var updateCal = function(data, element) {
+            var events = data._embedded.talks;
+            //fullCalendar's callback method should exist in the calling context
+            this.cb(events);            
+        };
+        
+        var events = function(start, end, timezone, callback) {
+            // update query params for new date range
+            p.start = start.format("DD/MM/YY");
+            p.end = end.format("DD/MM/YY");
+            //add the fullcalendar callback to the context
+            this.cb = callback;
             // fire off the query
-            oxtalks.queryTalks(params, oxtalks.updateCalendar.bind(callback), null);
+            this.queryTalks(p, updateCal.bind(this), null);
+        };
+        
+        return {
+            events: events.bind(this)    
+            //TODO Customise colours, editability here
         }
     },
     
-    updateCalendar: function(data, element) {
-        var events = data._embedded.talks;
-        //fullCalendar's callback method should exist in the calling context
-        this(events);
-    },
-    
+    //convert incoming talks json data to the Event format used by fullcalendar
     ConvertToCalendarEvent: function(talk) {
-//        if(fullCalendar) {
-            var event = {
-                id: talk.title,
-                title: talk.title,
-                allDay: false,
-                start: talk.start,
-                end: talk.end,
-                url: talk._links.talks_page.href,
-            }
-            return event;
-//        }
+        var event = {
+            id: talk.title,
+            title: talk.title,
+            start: talk.start,
+            end: talk.end,
+            url: talk._links.talks_page.href,
+        }
+        return event;
     },
     
     ///////
@@ -229,25 +236,30 @@ var oxtalks = {
         this.queryTalks(params, this.buildList, $(selector));
     },
 
-    //Create the calendar
+    //Create a calendar using fullCalendar. The query will be invoked by fullCalendar
     showCalendar: function(params, selector) {
-//        if(!fullCalendar) {
-//            console.error("Must have fullcalendar included in order to display a calendar");
-//            return;
-//        }
         //append to body if no selector specified
         if (!selector) {
             selector = this.createContainer();
         }
-        //TODO Store the params on the element
-        oxtalks.params = params;
+        
+        //check that the fullcalendar plugin is present and provide helpful feedback if not
+        if(!$.fullCalendar)
+        {
+            console.error("Fullcalendar plugin not present. Please consult the docs at http://talksox.readthedocs.org/en/latest/");
+            //error message for the end user
+            $(selector).text("Unable to display calendar");
+            return;
+        }
+
         //Create calendar
+        var eventSource = this.createEventSource(params);
         $(selector).fullCalendar({
-            events: this.eventSource,
+            eventSources: [ eventSource ],
             color: 'blue',
             textColor: 'white',
             editable: false,
-            eventDataTransform: oxtalks.ConvertToCalendarEvent,
+            eventDataTransform: this.ConvertToCalendarEvent,
         });
     },
 }
