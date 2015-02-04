@@ -256,7 +256,7 @@ var oxtalks = {
         var eventSource = this.createEventSource(params);
         $(selector).fullCalendar({
             eventSources: [ eventSource ],
-            color: 'blue',
+            eventColor: '#002147',
             textColor: 'white',
             editable: false,
             eventDataTransform: this.ConvertToCalendarEvent,
