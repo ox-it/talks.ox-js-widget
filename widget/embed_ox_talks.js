@@ -211,8 +211,45 @@ var oxtalks = {
             start: talk.start,
             end: talk.end,
             url: talk._links.talks_page.href,
+            description: talk.description,
         }
         return event;
+    },
+    
+    onCalMouseOver: function(event, jsEvent, view) {
+        var $target = $(jsEvent.target);
+       // create a popover showing the description of the event
+        var $popover = $("<div class='calendar-popover'></div>");
+        var $talkInfo = $("<div></div>");
+        $talkInfo.css({padding:'5px'});
+        $talkInfo.append($('<h2>' + event.title + '</h4>'));
+        $talkInfo.append($('<h3>' + event.start.format('Do MMM, H:mm a') + '</h5>'));
+        $talkInfo.append($('<p>' + event.description + '</p>'));
+        $talkInfo.css({
+            "backgroundColor": 'white',
+            "color": '#002147',
+            "border-color": '#002147',
+            "border-radius": '5px',
+            "border-style": 'solid',
+            "border-width": '1px',
+            "position": 'absolute',
+            "z-index": '1000',
+            "bottom": '15px',
+            "left": '-200px',
+            "min-width": '200px',
+            "max-width": '700px',
+            "width": '500%',
+        });
+        $popover.append($talkInfo);
+        //this is set to the event's div element.
+        $(this).append($popover);
+    },
+    onCalMouseOut: function(event, jsEvent, view) {
+        var $target = $(jsEvent.target);
+        // clean up the popover element
+        //this is set to the event's div element
+        var popover = $(this).find('.calendar-popover');
+        popover.remove();
     },
     
     ///////
@@ -259,7 +296,14 @@ var oxtalks = {
             eventColor: '#002147',
             textColor: 'white',
             editable: false,
+            header: {
+                left: 'title',
+                center: '',
+                right: 'prev,today,next month,basicWeek'
+            },
             eventDataTransform: this.ConvertToCalendarEvent,
+            eventMouseover: this.onCalMouseOver,
+            eventMouseout: this.onCalMouseOut,
         });
     },
 }
