@@ -1,6 +1,9 @@
 <html>
     <head>
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script src="../libs/jquery.min.js"></script>
+        <script src='../libs/moment.min.js'></script>
+        <link rel='stylesheet' href='../libs/fullcalendar.min.css' />
+        <script src='../libs/fullcalendar.min.js'></script>
         <script src = "embed_ox_talks.js"></script>
     </head>
     <body>
@@ -8,6 +11,7 @@
 
     <div id="embedded-talks"></div>
     <div id="embedded-table"></div>
+    <div id="embedded-calendar" style="max-width:800px"></div>
         
     <script>
     var params = 
@@ -24,6 +28,7 @@
 
     oxtalks.showTable( params );                    //appends to body, since no selector specified
     oxtalks.showList( params, "#embedded-talks" );  //replaces the contents of the specified element
+    oxtalks.showCalendar( params, "#embedded-calendar" );                 //appends a calendar to the body
     </script>
         
     </body>

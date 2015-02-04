@@ -167,12 +167,121 @@ var oxtalks = {
         return [];
     },
     
-    //create a new container, returns the jquery selector for it
+    //create a new div container, returns the jquery selector for it
     createContainer: function() {
         var divname = "oxtalks";
         var newDiv = $("<div id=" + divname + "></div>");
         $('body').append(newDiv);
         return '#' + divname;
+    },
+    
+    //create a new fullcalendar Eventsource for the given query params, which will be invoked by fullcalendar as the calendar is browsed
+    createEventSource: function(params) {
+        //store the search params for future queries
+        var p = params;
+        
+        //calls fullcalendar's callback with the new set of events
+        var updateCal = function(data, element) {
+            var events = data._embedded.talks;
+            //fullCalendar's callback method should exist in the calling context
+            this.cb(events);            
+        };
+        
+        var events = function(start, end, timezone, callback) {
+            // update query params for new date range
+            p.start = start.format("DD/MM/YY");
+            p.end = end.format("DD/MM/YY");
+            //add the fullcalendar callback to the context
+            this.cb = callback;
+            // fire off the query
+            this.queryTalks(p, updateCal.bind(this), null);
+        };
+        
+        return {
+            events: events.bind(this)    
+            //TODO Customise colours, editability here
+        }
+    },
+    
+    //convert incoming talks json data to the Event format used by fullcalendar
+    ConvertToCalendarEvent: function(talk) {
+        var event = {
+            id: talk._links.talks_page.href,
+            title: talk.title,
+            start: talk.start,
+            end: talk.end,
+            url: talk._links.talks_page.href,
+            description: talk.description.substring(0,200) + "... click for full description",
+        }
+        return event;
+    },
+    
+    onCalMouseOver: function(event, jsEvent, view) {
+        var $target = $(jsEvent.target);
+       // create a popover showing the description of the event
+        var $popover = $("<div class='calendar-popover'></div>");
+        var $talkInfo = $("<div></div>");
+        $talkInfo.css({padding:'5px'});
+        $talkInfo.append($('<h2>' + event.title + '</h2>'));
+        $talkInfo.append($('<h3>' + event.start.format('Do MMM, H:mm a') + '</h3>'));
+        $talkInfo.append($('<p>' + event.description + '</p>'));
+        
+        var popoverXOffset = -200;
+        $popover.css("z-index","1000");
+        $talkInfo.css({
+            "backgroundColor": 'white',
+            "opacity": '0.95',
+            "color": '#002147',
+            "border-color": '#002147',
+            "border-radius": '5px',
+            "border-style": 'solid',
+            "border-width": '1px',
+            "position": 'absolute',
+            "z-index": '1000',
+            "bottom": '15px',
+            "left": popoverXOffset+'px',
+            "min-width": '200px',
+            "max-width": '700px',
+            "width": '500%',
+            "max-height": '300px',
+            "overflow": 'scroll',
+        });
+        $popover.append($talkInfo);
+        //'this' is set to the event's div element.
+        $(this).append($popover);
+        
+        //check that the popover isn't outside the bounds of the window.
+        var offset = $talkInfo.offset();
+        //move in if it's off to the side
+        var newoffset = offset;
+        var windowWidth = $(window).width();
+        var popoverWidth = $talkInfo.width();
+        if(offset.left < 0 ) {
+            newoffset.left = 5;
+        }
+        var rEdge = offset.left + popoverWidth;
+        if(rEdge > windowWidth)
+        {
+            newoffset.left = windowWidth - popoverWidth - 15;
+        }
+        var windowScrollTop = $(window).scrollTop();
+        var windowYPos = offset.top - windowScrollTop;
+        var popoverHeight = $talkInfo.height();
+        //put it on the bottom if it's off to the top
+        if( windowYPos < 0 )
+        {
+            newoffset.top = windowScrollTop;
+        }
+        
+        $talkInfo.offset(newoffset);
+        $talkInfo.height(popoverHeight);
+    },
+    onCalMouseOut: function(event, jsEvent, view) {
+        var $target = $(jsEvent.target);
+        // clean up the popover element
+        //'this' is set to the event's div element
+        var popover = $(this).find('.calendar-popover');
+        popover.remove();
     },
     
     ///////
@@ -194,5 +303,42 @@ var oxtalks = {
             selector = this.createContainer();
         }
         this.queryTalks(params, this.buildList, $(selector));
-    }
+    },
+
+    //Create a calendar using fullCalendar. The query will be invoked by fullCalendar
+    showCalendar: function(params, selector) {
+        //append to body if no selector specified
+        if (!selector) {
+            selector = this.createContainer();
+        }
+        
+        //check that the fullcalendar plugin is present and provide helpful feedback if not
+        if(!$.fullCalendar)
+        {
+            console.error("Fullcalendar plugin not present. Please consult the docs at http://talksox.readthedocs.org/en/latest/");
+            //error message for the end user
+            $(selector).text("Unable to display calendar. This page is missing the fullcalendar script.");
+            return;
+        }
+
+        //The calendar can't support paging, so we 
+        params.page_size = 100;
+        
+        //Create calendar
+        var eventSource = this.createEventSource(params);
+        $(selector).fullCalendar({
+            eventSources: [ eventSource ],
+            eventColor: '#002147',
+            textColor: 'white',
+            editable: false,
+            header: {
+                left: 'title',
+                center: '',
+                right: 'prev,today,next month,basicWeek'
+            },
+            eventDataTransform: this.ConvertToCalendarEvent,
+            eventMouseover: this.onCalMouseOver,
+            eventMouseout: this.onCalMouseOut,
+        });
+    },
 }
