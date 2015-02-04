@@ -4,7 +4,11 @@
 
 Javascript widget for embedding talks information from talks.ox
 
-## Developer
+## Webmasters
+
+To make use of this widget, please consult the documentation at http://talksox-js-widget.readthedocs.org/en/latest/
+
+## Developers
 
 N.B. The node package file is used only for development dependencies. It is up to the user to ensure that a comaptible version of jQuery is loaded. If the calendar functionality is required, it's also necessary to include a version of moment.js and fullcalendar.js/css.
 
