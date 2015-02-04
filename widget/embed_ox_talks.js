@@ -211,7 +211,7 @@ var oxtalks = {
             start: talk.start,
             end: talk.end,
             url: talk._links.talks_page.href,
-            description: talk.description,
+            description: talk.description.substring(0,200) + "... click for full description",
         }
         return event;
     },
@@ -230,6 +230,7 @@ var oxtalks = {
         $popover.css("z-index","1000");
         $talkInfo.css({
             "backgroundColor": 'white',
+            "opacity": '0.95',
             "color": '#002147',
             "border-color": '#002147',
             "border-radius": '5px',
@@ -261,7 +262,7 @@ var oxtalks = {
         var rEdge = offset.left + popoverWidth;
         if(rEdge > windowWidth)
         {
-            newoffset.left = windowWidth - popoverWidth - 5;
+            newoffset.left = windowWidth - popoverWidth - 15;
         }
         var windowScrollTop = $(window).scrollTop();
         var windowYPos = offset.top - windowScrollTop;
