@@ -206,7 +206,7 @@ var oxtalks = {
     //convert incoming talks json data to the Event format used by fullcalendar
     ConvertToCalendarEvent: function(talk) {
         var event = {
-            id: talk.title,
+            id: talk._links.talks_page.href,
             title: talk.title,
             start: talk.start,
             end: talk.end,
@@ -222,8 +222,8 @@ var oxtalks = {
         var $popover = $("<div class='calendar-popover'></div>");
         var $talkInfo = $("<div></div>");
         $talkInfo.css({padding:'5px'});
-        $talkInfo.append($('<h2>' + event.title + '</h4>'));
-        $talkInfo.append($('<h3>' + event.start.format('Do MMM, H:mm a') + '</h5>'));
+        $talkInfo.append($('<h2>' + event.title + '</h2>'));
+        $talkInfo.append($('<h3>' + event.start.format('Do MMM, H:mm a') + '</h3>'));
         $talkInfo.append($('<p>' + event.description + '</p>'));
         
         var popoverXOffset = -200;
@@ -317,10 +317,13 @@ var oxtalks = {
         {
             console.error("Fullcalendar plugin not present. Please consult the docs at http://talksox.readthedocs.org/en/latest/");
             //error message for the end user
-            $(selector).text("Unable to display calendar");
+            $(selector).text("Unable to display calendar. This page is missing the fullcalendar script.");
             return;
         }
 
+        //The calendar can't support paging, so we 
+        params.page_size = 100;
+        
         //Create calendar
         var eventSource = this.createEventSource(params);
         $(selector).fullCalendar({
