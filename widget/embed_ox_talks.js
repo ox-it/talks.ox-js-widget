@@ -225,6 +225,9 @@ var oxtalks = {
         $talkInfo.append($('<h2>' + event.title + '</h4>'));
         $talkInfo.append($('<h3>' + event.start.format('Do MMM, H:mm a') + '</h5>'));
         $talkInfo.append($('<p>' + event.description + '</p>'));
+        
+        var popoverXOffset = -200;
+        $popover.css("z-index","1000");
         $talkInfo.css({
             "backgroundColor": 'white',
             "color": '#002147',
@@ -235,7 +238,7 @@ var oxtalks = {
             "position": 'absolute',
             "z-index": '1000',
             "bottom": '15px',
-            "left": '-200px',
+            "left": popoverXOffset+'px',
             "min-width": '200px',
             "max-width": '700px',
             "width": '500%',
@@ -243,13 +246,39 @@ var oxtalks = {
             "overflow": 'scroll',
         });
         $popover.append($talkInfo);
-        //this is set to the event's div element.
+        //'this' is set to the event's div element.
         $(this).append($popover);
+        
+        //check that the popover isn't outside the bounds of the window.
+        var offset = $talkInfo.offset();
+        //move in if it's off to the side
+        var newoffset = offset;
+        var windowWidth = $(window).width();
+        var popoverWidth = $talkInfo.width();
+        if(offset.left < 0 ) {
+            newoffset.left = 5;
+        }
+        var rEdge = offset.left + popoverWidth;
+        if(rEdge > windowWidth)
+        {
+            newoffset.left = windowWidth - popoverWidth - 5;
+        }
+        var windowScrollTop = $(window).scrollTop();
+        var windowYPos = offset.top - windowScrollTop;
+        var popoverHeight = $talkInfo.height();
+        //put it on the bottom if it's off to the top
+        if( windowYPos < 0 )
+        {
+            newoffset.top = windowScrollTop;
+        }
+        
+        $talkInfo.offset(newoffset);
+        $talkInfo.height(popoverHeight);
     },
     onCalMouseOut: function(event, jsEvent, view) {
         var $target = $(jsEvent.target);
         // clean up the popover element
-        //this is set to the event's div element
+        //'this' is set to the event's div element
         var popover = $(this).find('.calendar-popover');
         popover.remove();
     },
