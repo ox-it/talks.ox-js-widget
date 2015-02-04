@@ -14,6 +14,17 @@
     <div id="embedded-calendar" style="max-width:800px"></div>
         
     <script>
+        
+    // Optionally specify a set of parameters for initialising the fullcalendar, e.g. to customise appearance, timescale etc.
+    var calParams = {
+        //firstDay: 1,               //sets the week to start on Monday, rather than Sunday
+        //contentHeight: 400,          //override the height of the calendar
+        //eventColor: '#88ff88',       //customise colouring
+        //eventTextColor: '#111111',   //customise colouring
+        //defaultView: 'basicWeek',    //start on the week view instead of the month view
+        //      See http://fullcalendar.io/docs/ for a full list of possible parameters
+    };
+        
     var params = 
         {   from: "today",             //Start date range - dd/mm/yy. Required
             //to: null,                   //end date range, - dd/mm/yy
@@ -23,6 +34,7 @@
             //topics: [],                 //array of FAST topic URIs
             //url: null,                  //url stem for the API request. Defaults to http://talks.ox.ac.uk/api/talks/search?
             //page_size: 2                //optionally specify the page size for pagination of results.
+            calendarParams: calParams   //optionally supply parameters for the fullCalendar plugin
          };
 
 

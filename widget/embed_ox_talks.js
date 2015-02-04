@@ -198,8 +198,7 @@ var oxtalks = {
         };
         
         return {
-            events: events.bind(this)    
-            //TODO Customise colours, editability here
+            events: events.bind(this),
         }
     },
     
@@ -325,20 +324,25 @@ var oxtalks = {
         params.page_size = 100;
         
         //Create calendar
-        var eventSource = this.createEventSource(params);
-        $(selector).fullCalendar({
-            eventSources: [ eventSource ],
-            eventColor: '#002147',
-            textColor: 'white',
-            editable: false,
-            header: {
+        var fullCalendarParams = params.calendarParams? params.calendarParams : {};
+        fullCalendarParams.eventSources = [this.createEventSource(params)];
+        fullCalendarParams.eventDataTransform = this.ConvertToCalendarEvent;
+        fullCalendarParams.eventMouseover = this.onCalMouseOver;
+        fullCalendarParams.eventMouseout = this.onCalMouseOut;
+        
+        //set some suitable default calendar params if none are specified
+        if(!fullCalendarParams.eventColor) { fullCalendarParams.eventColor='#002147'; }
+        if(!fullCalendarParams.textColor) { fullCalendarParams.textColor='white'; }
+        if(!fullCalendarParams.editable) { fullCalendarParams.editable=false; }
+        if(!fullCalendarParams.header) {
+            fullCalendarParams.header = {
                 left: 'title',
                 center: '',
                 right: 'prev,today,next month,basicWeek'
-            },
-            eventDataTransform: this.ConvertToCalendarEvent,
-            eventMouseover: this.onCalMouseOver,
-            eventMouseout: this.onCalMouseOut,
-        });
+            };
+        }
+        
+        $(selector).fullCalendar(fullCalendarParams);
+
     },
 }
