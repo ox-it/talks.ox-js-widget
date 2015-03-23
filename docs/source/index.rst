@@ -1,3 +1,5 @@
+.. _widget-index:
+
 =========================
 Oxford Talks Embed Widget
 =========================
@@ -12,8 +14,6 @@ An example widget to get you started with embedding talks in your own webpages c
 The widget uses JavaScript to write a table, list or calendar view of selected talks to an HTML page. You can specify the criteria to select the talks you want.
 
 This is a very basic guide for web managers and integrators, developers can probably skip to the Parameters Reference at the end. For the calendar view, the widget uses a JQuery plugin, FullCalendar; comprehensive documentation for that can be found on the FullCalendar website - http://fullcalendar.io .
-
-.. _widget-index
 
 .. toctree::
    :maxdepth: 2
