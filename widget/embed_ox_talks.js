@@ -131,6 +131,8 @@ var oxtalks = {
         terms = terms.concat( this.buildTermsFromArray(params.venues, 'venue') );
         terms = terms.concat( this.buildTermsFromArray(params.organising_departments, 'organising_department') );
         terms = terms.concat( this.buildTermsFromArray(params.topics, 'topic') );
+	    terms = terms.concat( this.buildTermsFromArray(params.series, 'series'));
+
         if (params.page_size) {
             terms.push('count=' + params.page_size);
         }
