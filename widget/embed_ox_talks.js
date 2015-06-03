@@ -12,7 +12,8 @@ var oxtalks = {
     //given an array of speaker objects, return a comma separated list of their names
     get_person_titles: function(persons) {
         var titles = persons.map( function (person) {
-            return person.name + ' (' + person.bio + ')';
+            var bio = person.bio ? ' (' + person.bio + ')' : '';
+            return person.name + bio;
         });
         if(titles.length <= 0) {
             titles.push("TBA")
@@ -20,15 +21,15 @@ var oxtalks = {
         return titles.join(', ');
     },
     
-    build_location: function(venue) {
+    build_location: function(venue, location_summary) {
         if (venue) {
-            return "<a href=" + venue.map_link + ">" + venue.name + "</a>";
+            return "<a href=" + venue.map_link + ">" + location_summary + "</a>";
         }
         else return "TBA";
     },
     
     build_title: function(talk) {
-        var title = talk.title ? talk.title : "TBA";
+        var title = talk.title_display ? talk.title_display : "TBA";
         return "<a href='" + talk._links.talks_page.href + "'>" + title + "</a>";
     },
     
@@ -49,7 +50,7 @@ var oxtalks = {
         {
             talk = data._embedded.talks[i];
 
-            var location_name = this.build_location(talk._embedded.venue);
+            var location_name = this.build_location(talk._embedded.venue, talk.location_summary);
             var talk_title = this.build_title(talk);
             
             table.append($('<tr><td>' + talk.formatted_date
@@ -96,7 +97,7 @@ var oxtalks = {
     //                         + ', ' + start_time.toLocaleTimeString() 
     //                         + " - " + end_time.toLocaleTimeString() + '</li>'));
             bullets.append($('<li>' + talk.formatted_date + '</li>'));
-            var location = this.build_location(talk._embedded.venue);
+            var location = this.build_location(talk._embedded.venue, talk.location_summary);
             bullets.append($('<li>' + location + '</li>'));
             element.append(bullets);
         }
@@ -208,7 +209,7 @@ var oxtalks = {
     ConvertToCalendarEvent: function(talk) {
         var event = {
             id: talk._links.talks_page.href,
-            title: talk.title,
+            title: talk.title_display,
             start: talk.start,
             end: talk.end,
             url: talk._links.talks_page.href,
