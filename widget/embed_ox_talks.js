@@ -85,8 +85,8 @@ var oxtalks = {
             header = $('<h3>' + talk_title + '</h3>');
             element.append(header);
 
-            description = $('<p>');
-            description.html(talk.description);
+            description = $('<div>');
+            description.html('<p>' + talk.description.replace(/[\n\r]+/g, '&nbsp;</p><p>') + '</p>');
             element.append(description);
 
             bullets = $('<ul>');
